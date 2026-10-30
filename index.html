@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f3ed">
+<meta name="referrer" content="no-referrer">
+<meta name="description" content="小纸壳机器人远程控制：表情、天气时钟与中文备忘录。">
+<title>小纸壳 · 远程控制</title>
+<style>
+
+:root{color-scheme:light;--paper:#f5f3ed;--ink:#26372e;--muted:#748078;--line:#dedfd6;--green:#38614b;--soft:#e8eee5;--orange:#b36b32;--red:#af483d;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-size:15px;line-height:1.6}button,input,textarea{font:inherit}button{cursor:pointer;-webkit-tap-highlight-color:transparent}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #a9bc89;outline-offset:3px}button:disabled{cursor:wait;opacity:.55}[hidden]{display:none!important}.wrap{max-width:760px;margin:auto;padding:36px 24px 32px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:34px}.brand{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:650;letter-spacing:.07em}.logo{width:34px;height:34px;background:var(--green);border-radius:11px;display:flex;align-items:center;justify-content:center;gap:5px}.logo i{display:block;background:#e9efcc;width:5px;height:11px;border-radius:3px}.tag{font-size:11px;letter-spacing:.1em;color:var(--muted);border:1px solid var(--line);padding:4px 9px;border-radius:20px}h1{font-size:clamp(30px,7vw,42px);letter-spacing:-.04em;line-height:1.2;font-weight:650;margin:0 0 12px}.intro{color:var(--muted);margin:0 0 24px;font-size:14px}.connection{display:flex;align-items:center;gap:8px;font-size:12px;min-height:24px;color:var(--muted)}.dot{width:7px;height:7px;background:#a3aba4;border-radius:50%;flex:none}.dot.online{background:#528161;box-shadow:0 0 0 4px #52816112}.dot.offline{background:var(--orange)}.small-button{background:none;border:0;color:var(--green);font-size:12px;padding:5px 0;margin-left:auto}.section-label{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:11px;letter-spacing:.12em;margin:29px 0 12px}.section-label span:last-child{letter-spacing:0;font-size:12px}.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.mode{appearance:none;text-align:left;border:1px solid var(--line);border-radius:16px;background:#fff9;padding:18px 14px;min-height:145px;color:var(--ink);position:relative;transition:background .15s,border-color .15s,transform .15s}.mode:hover{transform:translateY(-2px)}.mode[aria-pressed="true"]{background:var(--soft);border-color:#91a88e;box-shadow:inset 0 0 0 1px #91a88e}.mode .number{font:11px ui-monospace,monospace;color:var(--muted)}.mode .icon{display:block;height:33px;margin:10px 0 11px;font-size:26px;line-height:1}.mode strong{font-size:14px;font-weight:650;display:block}.mode small{font-size:11px;color:var(--muted);display:block;margin-top:4px}.selected{position:absolute;top:17px;right:14px;width:7px;height:7px;background:var(--green);border-radius:50%;display:none}.mode[aria-pressed="true"] .selected{display:block}.editor{margin-top:22px;background:#fff9;border:1px solid var(--line);border-radius:20px;padding:24px}.editor-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:17px}.editor h2{font-size:16px;font-weight:650;margin:0}.hint{font-size:12px;color:var(--muted);margin:5px 0 0}.preview-area{display:flex;align-items:center;justify-content:center;background:#eaece4;border-radius:12px;padding:22px;margin-bottom:20px}.device{width:100%;max-width:282px;padding:12px;background:#344139;border:1px solid #4c5b51;border-radius:13px;box-shadow:0 8px 15px #26372e14}.screen{width:100%;height:auto;aspect-ratio:2/1;background:#0a0d0b;position:relative;border:1px solid #0a0d0b;overflow:hidden}.screen canvas{display:block;width:100%;height:100%;image-rendering:pixelated}.screen-title{position:absolute;top:4px;left:8px;color:#fff;font:14px ui-monospace,monospace;letter-spacing:1px;pointer-events:none}.field-label{display:block;font-size:13px;font-weight:600;margin-bottom:8px}textarea{display:block;width:100%;min-height:110px;resize:vertical;border:1px solid var(--line);border-radius:10px;padding:12px 13px;background:#fffc;color:var(--ink);line-height:1.75}textarea::placeholder{color:#9ba29b}.counter-row{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin:8px 0 16px;font-size:11px;color:var(--muted)}#validation{max-width:80%}.invalid{color:var(--red)!important}.primary{background:var(--green);color:#fff;border:1px solid var(--green);border-radius:10px;padding:11px 17px;font-weight:600;font-size:13px}.save{width:100%}.note{font-size:11px;color:var(--muted);margin:12px 0 0}.info{display:flex;flex-wrap:wrap;gap:7px 18px;font-size:11px;color:var(--muted);margin-top:20px}.info span{white-space:nowrap}.message{margin-top:18px;font-size:13px;color:var(--green);min-height:22px;word-break:break-word}.message.error{color:var(--red)}footer{border-top:1px solid var(--line);margin-top:24px;padding-top:16px;display:flex;justify-content:space-between;gap:10px;font-size:10px;color:var(--muted)}.pair{background:#fff9;border:1px solid var(--line);border-radius:20px;padding:25px;margin-top:26px}.pair h2{margin:0 0 8px;font-size:19px;font-weight:600}.pair p{color:var(--muted);font-size:13px;margin:0 0 20px}.pin-row{display:flex;gap:10px}.pin-row input{min-width:0;width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:22px ui-monospace,monospace;letter-spacing:.25em;background:#fff}.pin-note{font-size:11px;color:var(--muted);margin-top:12px}
+@media(min-width:640px){.wrap{padding:45px 40px}.mode{padding:20px;min-height:158px}.mode strong{font-size:16px}.mode small{font-size:12px}.editor{padding:26px}.editor-body{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}.preview-area{margin:0;height:220px;padding:16px}.device{padding:10px}.screen-title{font-size:13px;top:3px;left:7px}.editor-form{min-width:0}textarea{min-height:100px}.counter-row{margin-bottom:12px}}
+@media(max-width:370px){.wrap{padding:25px 16px}.modes{gap:7px}.mode{padding:14px 10px;min-height:140px}.mode small{font-size:10px}.editor{padding:16px}.preview-area{padding:20px 6px}.pin-row{flex-wrap:wrap}.pin-row button{width:100%}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+.pair .intro-copy{margin-bottom:16px}.pair input.url,.pair input.secret{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 12px;background:#fff;color:var(--ink);font-size:14px;letter-spacing:0}.pair .field-label:not(:first-child){margin-top:16px}.pair .primary{width:100%;margin-top:18px}.setup{margin:0 0 18px;padding:12px 14px;background:var(--soft);border-radius:10px;color:var(--green);font-size:12px}.pending-tag{position:absolute;top:12px;right:10px;border:1px solid #c78d59;color:#9a5b29;background:#fff9ed;font-size:10px;border-radius:10px;padding:1px 5px;display:none}.mode[data-pending="true"] .pending-tag{display:block}.mode[data-pending="true"] .selected{top:38px}.command-status{margin-top:18px;padding:13px 15px;border:1px solid var(--line);border-radius:12px;background:#fff6;font-size:12px;color:var(--muted)}.command-status.pending{border-color:#d6b48d;background:#fff9ed;color:#915a2e}.command-status.confirmed{background:var(--soft);border-color:#a7b8a0;color:var(--green)}.command-status strong{display:block;font-size:13px;font-weight:600}.command-status p{margin:4px 0 0}.field-help{font-size:11px;color:var(--muted);margin:7px 0 0}.link-button{appearance:none;border:0;background:none;padding:0;color:var(--green);text-decoration:underline;font:inherit;cursor:pointer}.session-actions{display:flex;align-items:center;gap:13px;margin-left:auto;flex-shrink:0}.session-actions .small-button{margin:0}.connection{align-items:flex-start}.connection .dot{margin-top:7px}.connection-label{min-width:0}.connection-label small{display:block;font-size:10px;color:var(--muted);margin-top:2px}.actual-note{font-size:11px;color:var(--muted);margin:10px 0 0}.info{gap:5px 15px}.info span:last-child{white-space:normal}.mode[aria-pressed="true"]:disabled{opacity:.75}a{color:var(--green)}
+@media(max-width:430px){.connection{flex-wrap:wrap}.session-actions{margin-left:15px;width:100%}.tag{font-size:10px;letter-spacing:.02em}.mode strong{font-size:13px}.mode small{font-size:10px}.pending-tag{right:7px}}
+
+</style>
+</head>
+
+<body>
+<div class="wrap">
+  <header class="top"><div class="brand"><span class="logo" aria-hidden="true"><i></i><i></i></span>小纸壳</div><span class="tag">CLOUD CONTROL</span></header>
+  <h1>不在身边，也能陪伴。</h1>
+  <p class="intro">换个表情，留句话。手机用 Wi-Fi 或流量都可以。</p>
+  <div class="connection" role="status"><span class="dot" id="connectionDot"></span><div class="connection-label"><span id="connectionText">尚未连接云端</span><small id="lastSeen"></small></div><div class="session-actions" id="sessionActions" hidden><button class="small-button" id="reconnect" type="button">刷新状态</button><button class="small-button" id="changeConnection" type="button">更换连接</button></div></div>
+
+  <section class="pair" id="pairPanel" aria-labelledby="pairTitle">
+    <h2 id="pairTitle">连接你的小纸壳</h2>
+    <p class="intro-copy">连接云端后查看机器人实际状态。这里使用远程控制密钥，与六位局域网配对码不同。</p>
+    <div class="setup" id="setupNote">先部署配套 Cloudflare Worker，再把公开 HTTPS 地址填在下面，或填入 config.js。GitHub Pages 负责显示网页，Worker 负责转交指令。</div>
+    <form id="pairForm">
+      <label class="field-label" for="apiBase">云端地址</label>
+      <input class="url" id="apiBase" name="apiBase" type="url" inputmode="url" autocomplete="url" placeholder="https://你的项目.你的账户.workers.dev" required aria-describedby="apiHelp">
+      <p class="field-help" id="apiHelp">填写 Worker 的 HTTPS 地址，不需要填写机器人 IP，也不加 /api。</p>
+      <label class="field-label" for="controlToken">远程控制密钥</label>
+      <input class="secret" id="controlToken" name="controlToken" type="password" autocomplete="off" spellcheck="false" minlength="32" maxlength="256" required aria-describedby="tokenHelp">
+      <p class="field-help" id="tokenHelp">至少 32 个字符，只在当前标签页会话中保留。不要使用 Wi-Fi 密码或六位配对码。</p>
+      <button class="primary" id="pairButton" type="submit">连接云端</button>
+    </form>
+  </section>
+
+  <main id="controls" hidden>
+    <div class="section-label"><span>01 / 选择模式</span><span id="modeLabel">等待设备首次上报</span></div>
+    <div class="modes" role="group" aria-label="选择屏幕模式">
+      <button class="mode" type="button" data-mode="eyes" aria-pressed="false"><span class="number">01</span><span class="selected" aria-hidden="true"></span><span class="pending-tag">待执行</span><span class="icon" aria-hidden="true">◕ ◕</span><strong>表情动画</strong><small>轮流展示不同心情</small></button>
+      <button class="mode" type="button" data-mode="weather" aria-pressed="false"><span class="number">02</span><span class="selected" aria-hidden="true"></span><span class="pending-tag">待执行</span><span class="icon" aria-hidden="true">☀</span><strong>天气与时间</strong><small>日期、天气交替显示</small></button>
+      <button class="mode" type="button" data-mode="memo" aria-pressed="false"><span class="number">03</span><span class="selected" aria-hidden="true"></span><span class="pending-tag">待执行</span><span class="icon" aria-hidden="true">≡</span><strong>小小备忘录</strong><small>把想说的话留在屏幕</small></button>
+    </div>
+    <p class="actual-note">实心圆表示设备最近上报的实际模式。机器人离线时，仍可保存下一次要执行的指令。</p>
+    <div id="commandStatus" class="command-status" role="status" aria-live="polite"><strong id="commandTitle">等待设备状态</strong><p id="commandDetail">连接后会自动读取云端保存的状态。</p></div>
+
+    <section class="editor" aria-labelledby="memoTitle">
+      <div class="editor-head"><div><h2 id="memoTitle">留一句话</h2><p class="hint">一件小事，一个提醒，或者一句晚安。</p></div></div>
+      <div class="editor-body">
+        <div class="preview-area"><div class="device"><div class="screen" role="img" aria-label="128 × 64 像素 OLED 备忘录预览"><canvas id="preview" width="128" height="64"></canvas><span class="screen-title" aria-hidden="true">MEMO</span></div></div></div>
+        <div class="editor-form">
+          <label class="field-label" for="memo">屏幕上的文字</label>
+          <textarea id="memo" placeholder="比如：记得喝水，早点休息。" spellcheck="false" aria-describedby="validation count"></textarea>
+          <div class="counter-row"><span id="validation">最多 24 个字符，自动换行，最多 3 行。</span><span id="count">0 / 24</span></div>
+          <button id="saveMemo" class="primary save" type="button">保存并切换到备忘录</button>
+        </div>
+      </div>
+      <p class="note">预览对应实际 128 × 64 点阵。空文字可清除备忘录。离线时只保留最近一次待执行指令，新提交会覆盖旧指令。</p>
+    </section>
+    <div class="info"><span id="clockState">校时：等待上报</span><span id="weatherState">天气：等待上报</span><span id="uptimeState">设备运行：—</span></div>
+  </main>
+  <div id="message" class="message" role="status" aria-live="polite"></div>
+  <p class="note">天气数据：<a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a></p>
+  <footer><span>隔着一点距离，心情也能抵达。</span><span>小纸壳 · 远程控制</span></footer>
+</div>
+<script>
+"use strict";
+
+// 这里只填写公开的 Cloudflare Worker HTTPS 地址，末尾不加 /api。
+// 远程控制密钥由使用者在页面中输入，绝不能写在这里或 GitHub 仓库中。
+window.PAPER_ROBOT_CONFIG = Object.freeze({
+  apiBase: ""
+});
+
+</script>
+<script>
+"use strict";
+(function () {
+  const $ = id => document.getElementById(id);
+  const names = {eyes: "表情动画", weather: "天气与时间", memo: "小小备忘录"};
+  const modeButtons = Array.from(document.querySelectorAll("[data-mode]"));
+  const sessionKey = "paperRobotCloudSession";
+  const addressKey = "paperRobotCloudAddress";
+  let apiBase = "", token = "", busy = false, cloudReady = false;
+  let memoValid = true, memoDirty = false, loaded = false;
+  let currentStatus = null, awaitingSeq = 0, confirmedSeq = 0, submittedMemo = null;
+
+  // Only the public Worker address can persist between browser sessions.
+  function normalizeAddress(value) {
+    let url;
+    try { url = new URL(String(value).trim()); }
+    catch (_) { throw new Error("请输入完整的云端 HTTPS 地址。"); }
+    if (url.protocol !== "https:" || url.username || url.password || url.search || url.hash) {
+      throw new Error("云端地址必须使用 HTTPS，且不能包含账号、密码、查询参数或 #。");
+    }
+    if (!url.hostname || url.pathname.replace(/\/+$/, "")) {
+      throw new Error("请填写 Worker 的根地址，不加 /api 或其他路径。");
+    }
+    return url.origin;
+  }
+
+  function validToken(value) {
+    return typeof value === "string" && /^[\x21-\x7e]{32,256}$/.test(value);
+  }
+
+  function forgetSession() {
+    token = "";
+    try { sessionStorage.removeItem(sessionKey); } catch (_) {}
+  }
+
+  function saveSession() {
+    try { sessionStorage.setItem(sessionKey, JSON.stringify({apiBase, token})); } catch (_) {}
+    try { localStorage.setItem(addressKey, apiBase); } catch (_) {}
+  }
+
+  // Raster output is exactly SSD1306 MONO_VLSB: 8 vertical pixels per byte.
+  window.memoRaster = function (text) {
+    if (typeof text !== "string") throw new Error("请输入文字。");
+    if (Array.from(text).length > 24) throw new Error("最多 24 个字符，请删减一些文字。");
+    if (Array.from(text).some(char => { const point = char.codePointAt(0); return point >= 0xd800 && point <= 0xdfff; })) throw new Error("有字符无法识别，请删除后重新输入。");
+    if (/[\u0000-\u0009\u000b-\u001f\u007f-\u009f]/.test(text)) throw new Error("文字中不能包含控制字符，请只输入普通文字和换行。");
+    if (/[\u2028\u2029]/.test(text)) throw new Error("请使用回车键换行。");
+    const canvas = document.createElement("canvas");
+    canvas.width = 128; canvas.height = 64;
+    const ctx = canvas.getContext("2d", {willReadFrequently: true});
+    if (!ctx) throw new Error("浏览器无法生成屏幕预览，请换一个浏览器。");
+    ctx.fillStyle = "#000"; ctx.fillRect(0, 0, 128, 64);
+    ctx.font = '14px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif';
+    ctx.textBaseline = "top"; ctx.fillStyle = "#fff";
+    const lines = [];
+    for (const paragraph of text.split("\n")) {
+      let line = "";
+      for (const char of Array.from(paragraph)) {
+        if (ctx.measureText(char).width > 120) throw new Error("有字符过宽，无法放进屏幕。");
+        if (ctx.measureText(line + char).width > 120) { lines.push(line); line = char; }
+        else line += char;
+      }
+      lines.push(line);
+    }
+    if (lines.length > 3) throw new Error("文字超过 3 行，请删减文字或减少手动换行。");
+    lines.forEach((line, i) => ctx.fillText(line, 4, 16 + i * 16));
+    const rgba = ctx.getImageData(0, 0, 128, 64).data;
+    const bytes = new Uint8Array(1024);
+    for (let y = 0; y < 64; y++) for (let x = 0; x < 128; x++) {
+      const at = (y * 128 + x) * 4;
+      if ((rgba[at] + rgba[at + 1] + rgba[at + 2]) / 3 >= 128) bytes[x + (y >> 3) * 128] |= 1 << (y & 7);
+    }
+    return {bitmap: btoa(Array.from(bytes, byte => String.fromCharCode(byte)).join("")), lines};
+  };
+
+  function message(text, error) {
+    $("message").textContent = text;
+    $("message").classList.toggle("error", !!error);
+  }
+
+  function updateButtons() {
+    modeButtons.forEach(button => { button.disabled = busy || !cloudReady; });
+    $("saveMemo").disabled = busy || !cloudReady || !memoValid;
+    $("pairButton").disabled = busy;
+    $("reconnect").disabled = busy;
+    $("changeConnection").disabled = busy;
+  }
+
+  function connection(kind, text) {
+    $("connectionDot").className = "dot " + kind;
+    $("connectionText").textContent = text;
+    $("sessionActions").hidden = !token;
+    updateButtons();
+  }
+
+  function showPairing(reason) {
+    forgetSession();
+    cloudReady = false;
+    $("pairPanel").hidden = false;
+    $("controls").hidden = true;
+    $("controlToken").value = "";
+    $("lastSeen").textContent = "";
+    connection("", "尚未连接云端");
+    if (reason) message(reason, true);
+  }
+
+  function paintPreview(bitmap) {
+    const ctx = $("preview").getContext("2d");
+    if (!ctx) return;
+    const pixels = ctx.createImageData(128, 64);
+    const raw = atob(bitmap);
+    for (let y = 0; y < 64; y++) for (let x = 0; x < 128; x++) {
+      const on = raw.charCodeAt(x + (y >> 3) * 128) & (1 << (y & 7));
+      const at = (y * 128 + x) * 4;
+      pixels.data[at] = pixels.data[at + 1] = pixels.data[at + 2] = on ? 255 : 0;
+      pixels.data[at + 3] = 255;
+    }
+    ctx.putImageData(pixels, 0, 0);
+  }
+
+  function validateMemo() {
+    const count = Array.from($("memo").value).length;
+    $("count").textContent = count + " / 24";
+    $("count").classList.toggle("invalid", count > 24);
+    try {
+      const raster = window.memoRaster($("memo").value);
+      memoValid = true;
+      paintPreview(raster.bitmap);
+      $("validation").textContent = count ? "剩余 " + (24 - count) + " 个字符 · " + raster.lines.length + " / 3 行" : "最多 24 个字符，自动换行，最多 3 行。";
+      $("validation").classList.remove("invalid");
+      $("memo").setAttribute("aria-invalid", "false");
+    } catch (error) {
+      memoValid = false;
+      paintPreview(btoa("\0".repeat(1024)));
+      $("validation").textContent = error.message;
+      $("validation").classList.add("invalid");
+      $("memo").setAttribute("aria-invalid", "true");
+    }
+    updateButtons();
+  }
+
+  function commandStatus(kind, title, detail) {
+    $("commandStatus").className = "command-status " + kind;
+    $("commandTitle").textContent = title;
+    $("commandDetail").textContent = detail;
+  }
+
+  function checkStatus(status) {
+    if (!status || typeof status !== "object" ||
+        (status.mode !== null && !Object.prototype.hasOwnProperty.call(names, status.mode)) ||
+        (status.desired_mode !== null && !Object.prototype.hasOwnProperty.call(names, status.desired_mode)) ||
+        !Number.isSafeInteger(status.seq) || status.seq < 0 ||
+        !Number.isSafeInteger(status.ack_seq) || status.ack_seq < 0 || status.ack_seq > status.seq ||
+        (status.seq > status.ack_seq && !Object.prototype.hasOwnProperty.call(names, status.desired_mode)) ||
+        typeof status.online !== "boolean" ||
+        (status.last_seen !== null && (!Number.isFinite(status.last_seen) || status.last_seen < 0))) {
+      throw new Error("云端返回的状态格式不正确，请检查后端版本。");
+    }
+    return status;
+  }
+
+  function renderCommand(status, submitted) {
+    const pending = status.seq > status.ack_seq;
+    if (submittedMemo && status.online && status.ack_seq >= submittedMemo.seq && status.memo === submittedMemo.text) {
+      if ($("memo").value === submittedMemo.text) memoDirty = false;
+      submittedMemo = null;
+    }
+    if (submitted) {
+      awaitingSeq = status.seq;
+      confirmedSeq = 0;
+      commandStatus("pending", "指令已保存，等待设备执行。", status.online ? "收到设备上报确认后，这里才会显示执行完成。" : "设备当前离线，上线后会执行最近一次指令。再次提交将覆盖之前的待执行指令。");
+      return;
+    }
+    // A reload can resume tracking the latest pending instruction on the server.
+    if (pending) {
+      awaitingSeq = Math.max(awaitingSeq, status.seq);
+      confirmedSeq = 0;
+      commandStatus("pending", "指令已保存，等待设备执行。", (status.online ? "设备在线，正在等待它确认" + names[status.desired_mode] + "。" : "设备当前离线，上线后会执行最近一次指令。") + "再次提交会覆盖待执行指令。");
+    } else if (status.online && ((awaitingSeq > 0 && status.ack_seq >= awaitingSeq) || (confirmedSeq > 0 && status.ack_seq === confirmedSeq))) {
+      commandStatus("confirmed", "设备已确认执行。", "当前实际模式：" + (names[status.mode] || "等待上报") + "。以下状态来自设备最新上报。");
+      confirmedSeq = status.ack_seq;
+      awaitingSeq = 0;
+    } else if (awaitingSeq > 0) {
+      commandStatus("pending", "指令已保存，等待设备确认。", "设备当前离线，恢复在线并上报后才能确认执行结果。");
+    } else if (status.last_seen) {
+      commandStatus("", status.online ? "设备状态已同步。" : "显示设备上次上报的状态。", status.online ? "可切换模式或发送备忘录。" : "设备当前离线。你仍可保存指令，等待它上线执行。");
+    } else {
+      commandStatus("", "等待设备首次上报。", "请让小纸壳联网并运行云端连接模块。现在也可以先保存一条指令。");
+    }
+  }
+
+  function applyStatus(raw, options) {
+    const status = checkStatus(raw);
+    currentStatus = status;
+    cloudReady = true;
+    $("pairPanel").hidden = true;
+    $("controls").hidden = false;
+    const pending = status.seq > status.ack_seq;
+    modeButtons.forEach(button => {
+      button.setAttribute("aria-pressed", String(button.dataset.mode === status.mode));
+      button.dataset.pending = String(pending && button.dataset.mode === status.desired_mode);
+    });
+    $("modeLabel").textContent = status.mode ? (status.online ? "正在显示 · " : "上次上报 · ") + names[status.mode] : "等待设备首次上报";
+    connection(status.online ? "online" : "offline", status.online ? "云端已连接 · 机器人在线" : "云端已连接 · 机器人离线");
+    $("lastSeen").textContent = status.last_seen ? "最近上报：" + new Date(status.last_seen * 1000).toLocaleString("zh-CN", {hour12: false}) : "设备尚未上报状态";
+    $("clockState").textContent = "校时：" + (status.last_seen ? (status.clock_synced === true ? "已同步" : "未同步") : "等待上报");
+    $("weatherState").textContent = "天气：" + (status.last_seen ? (status.weather_ok === true ? "已有数据" : "等待更新") : "等待上报");
+    const seconds = Number(status.uptime);
+    $("uptimeState").textContent = "设备运行：" + (status.last_seen && Number.isFinite(seconds) && seconds >= 0 ? (seconds < 3600 ? Math.floor(seconds / 60) + " 分钟" : Math.floor(seconds / 3600) + " 小时 " + Math.floor(seconds % 3600 / 60) + " 分钟") + (status.online ? "" : "（上次上报）") : "—");
+    if (!loaded || !memoDirty) {
+      $("memo").value = typeof status.memo === "string" ? status.memo : "";
+      validateMemo();
+    }
+    loaded = true;
+    renderCommand(status, options && options.submitted);
+  }
+
+  async function api(path, body) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
+    try {
+      const headers = {Authorization: "Bearer " + token};
+      const options = {method: body === undefined ? "GET" : "POST", headers, signal: controller.signal, cache: "no-store", credentials: "omit", referrerPolicy: "no-referrer"};
+      if (body !== undefined) {
+        headers["Content-Type"] = "application/json";
+        options.body = JSON.stringify(body);
+      }
+      const response = await fetch(apiBase + path, options);
+      if (response.status === 401 || response.status === 403) {
+        showPairing("远程控制密钥不正确或当前网页来源未获允许，请检查后重新连接。");
+        throw new Error("请检查云端地址与远程控制密钥后重试。");
+      }
+      if (!response.ok) {
+        if (response.status === 429) throw new Error("请求过于频繁，请稍等片刻再试。");
+        if (response.status === 400 || response.status === 413) throw new Error("云端未接受这条指令，请检查文字长度、行数和后端配置。");
+        throw new Error("云端暂时无法处理请求，请稍后重试。");
+      }
+      try { return await response.json(); }
+      catch (_) { throw new Error("云端没有返回完整信息，请检查 Worker 地址。"); }
+    } finally { clearTimeout(timeout); }
+  }
+
+  async function perform(action, quiet) {
+    if (busy) return;
+    busy = true;
+    updateButtons();
+    try {
+      await action();
+    } catch (error) {
+      if (token) {
+        cloudReady = false;
+        connection("offline", "云端连接中断 · 设备状态暂时未知");
+        if (currentStatus && currentStatus.mode) $("modeLabel").textContent = "上次上报 · " + names[currentStatus.mode];
+      }
+      const text = error.name === "AbortError" ? "连接云端超时，执行结果尚未确认。请刷新状态后再决定是否重试。" : error instanceof TypeError ? "无法连接云端，请检查手机网络、Worker 地址及后端允许的网页来源。" : error.message;
+      if (!quiet || !cloudReady) message(text, true);
+    } finally {
+      busy = false;
+      updateButtons();
+    }
+  }
+
+  function refresh(quiet) {
+    if (!token || !apiBase) return;
+    return perform(async () => {
+      applyStatus(await api("/api/status"));
+      message(quiet ? "" : "云端状态已更新。", false);
+    }, quiet);
+  }
+
+  $("pairForm").addEventListener("submit", event => {
+    event.preventDefault();
+    if (busy) return;
+    let candidateAddress;
+    try { candidateAddress = normalizeAddress($("apiBase").value); }
+    catch (error) { message(error.message, true); return; }
+    const candidateToken = $("controlToken").value.trim();
+    if (!validToken(candidateToken)) {
+      message("远程控制密钥需为 32 至 256 个英文、数字或符号字符，不能包含空格或换行。", true);
+      return;
+    }
+    apiBase = candidateAddress;
+    token = candidateToken;
+    awaitingSeq = 0;
+    confirmedSeq = 0;
+    currentStatus = null;
+    loaded = false;
+    submittedMemo = null;
+    perform(async () => {
+      applyStatus(await api("/api/status"));
+      saveSession();
+      $("controlToken").value = "";
+      message("云端已连接。机器人是否在线，以设备上报状态为准。", false);
+    }, false);
+  });
+
+  modeButtons.forEach(button => button.addEventListener("click", () => {
+    const mode = button.dataset.mode;
+    if (currentStatus && currentStatus.mode === mode && currentStatus.seq === currentStatus.ack_seq && currentStatus.online) return;
+    perform(async () => {
+      applyStatus(await api("/api/mode", {mode}), {submitted: true});
+      message("", false);
+    }, false);
+  }));
+
+  $("memo").addEventListener("input", () => { memoDirty = true; validateMemo(); });
+  $("saveMemo").addEventListener("click", () => {
+    let raster;
+    try { raster = window.memoRaster($("memo").value); }
+    catch (error) { message(error.message, true); return; }
+    const text = $("memo").value;
+    perform(async () => {
+      const status = await api("/api/memo", {text, bitmap: raster.bitmap});
+      // Keep the submitted draft visible until the device reports that content.
+      // Further typing is also preserved while status requests are in flight.
+      memoDirty = true;
+      submittedMemo = {seq: status.seq, text};
+      applyStatus(status, {submitted: true});
+      message("", false);
+    }, false);
+  });
+
+  $("reconnect").addEventListener("click", () => refresh(false));
+  $("changeConnection").addEventListener("click", () => {
+    if (busy) return;
+    showPairing();
+    awaitingSeq = 0;
+    confirmedSeq = 0;
+    currentStatus = null;
+    loaded = false;
+    submittedMemo = null;
+    $("apiBase").value = apiBase;
+    message("已移除本标签页保存的远程控制密钥。", false);
+    $("controlToken").focus();
+  });
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) refresh(true); });
+  setInterval(() => { if (!document.hidden && token && !busy) refresh(true); }, 5000);
+
+  let publicAddress = "";
+  try { publicAddress = localStorage.getItem(addressKey) || ""; } catch (_) {}
+  if (!publicAddress && window.PAPER_ROBOT_CONFIG) publicAddress = window.PAPER_ROBOT_CONFIG.apiBase || "";
+  try { apiBase = publicAddress ? normalizeAddress(publicAddress) : ""; } catch (_) { apiBase = ""; }
+  try {
+    const stored = JSON.parse(sessionStorage.getItem(sessionKey) || "null");
+    if (stored && validToken(stored.token)) {
+      apiBase = normalizeAddress(stored.apiBase);
+      token = stored.token;
+    }
+  } catch (_) { forgetSession(); }
+  $("apiBase").value = apiBase;
+  $("setupNote").hidden = !!apiBase;
+  validateMemo();
+  if (token && apiBase) refresh(false);
+  else showPairing();
+})();
+
+</script>
+</body>
+</html>
