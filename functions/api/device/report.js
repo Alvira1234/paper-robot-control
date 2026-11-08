@@ -11,11 +11,11 @@ export async function onRequest(context) {
   const now = Math.floor(Date.now() / 1000);
   state.last_seen = now;
   state.online = true;
-  state.mode = report.mode === "ros2" ? "eyes" : state.desired_mode || "eyes";
+  state.mode = report.display_mode === "eyes" ? "eyes" : state.mode;
   state.uptime = Number.isFinite(report.uptime) && report.uptime >= 0 ? report.uptime : state.uptime;
-  if (state.seq > state.ack_seq) {
-    state.ack_seq = state.seq;
-    state.desired_mode = state.mode;
+  if (Number.isSafeInteger(report.ack_seq) && report.ack_seq > state.ack_seq) {
+    state.ack_seq = Math.min(report.ack_seq, state.seq);
+    if (state.ack_seq >= state.seq) state.desired_mode = state.mode;
   }
   await writeState(context.env, state);
   return json(state, 200, context.request);
