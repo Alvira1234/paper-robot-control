@@ -26,10 +26,11 @@ export async function writeState(env, state) {
 }
 
 export function authorized(request, env) {
-  const expected = env.CONTROL_TOKEN;
+  const raw = env.CONTROL_TOKEN;
+  const expected = typeof raw === "string" ? raw.trim() : "";
   const actual = request.headers.get("Authorization") || "";
-  return typeof expected === "string" && expected.length >= 32 &&
-    actual === "Bearer " + expected;
+  const token = actual.startsWith("Bearer ") ? actual.slice(7).trim() : "";
+  return expected.length >= 32 && token === expected;
 }
 
 export function json(data, status = 200, request = null) {

@@ -19,9 +19,8 @@ POST /api/device/report
 
 ## ESP32
 
-`firmware/cloud.py` 使用 MicroPython 的 `urequests`。如果开发板没有该模块，请先把
-MicroPython 版本的 `urequests.py` 一起上传。然后把 `cloud.py` 和其他固件文件一起上传，
-并在 `firmware/config.py` 填写 Wi-Fi、API 地址和同一个控制密钥：
+`firmware/cloud.py` 自带精简 HTTPS 客户端（socket + TLS），不依赖 `urequests`，
+把它和其他固件文件一起上传即可。在 `firmware/config.py` 填写 Wi-Fi、API 地址和同一个控制密钥：
 
 ```python
 CLOUD_ENABLED = True
